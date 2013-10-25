@@ -1,0 +1,95 @@
+#include <iostream>
+
+using namespace std;
+
+class MaxPQ
+{
+private:
+
+    int *pq;
+    int n;
+
+    bool lessA(int i , int j)
+    {
+        if(pq[i]<pq[j])
+            return 1;
+        return 0;
+    }
+
+    void exch(int i , int j)
+    {
+        int temp = pq[i];
+        pq[i] = pq[j];
+        pq[j] = temp;
+    }
+
+    void swim(int k)
+    {
+        while(k>1 && lessA(k/2 , k))
+        {
+            exch(k/2 , k);
+            k = k/2;
+        }
+    }
+
+    void sink(int k)
+    {
+        while(2*k <= n)
+        {
+            int j = 2*k;
+            if(j<n && lessA(j , j+1))
+                j++;
+            if(!lessA(k , j))
+                break;
+            exch(k , j);
+            k=j;
+        }
+    }
+
+public:
+
+    MaxPQ(int capacity)
+    {
+        pq = new int[capacity +1];
+        n=0;
+    }
+
+    bool isEmpty()
+    {
+        return n==0;
+    }
+
+    void insertKey(int key)
+    {
+        pq[++n] = key;
+        swim(n);
+    }
+
+    int delMax()
+    {
+        int maximum = pq[1];
+
+        exch(1 , n--);
+
+        sink(1);
+
+        pq[n+1] = NULL;
+
+        return maximum;
+    }
+
+
+
+};
+int main()
+{
+    MaxPQ ob(5);
+    ob.insertKey(3);
+    ob.insertKey(4);
+    ob.insertKey(2);
+    ob.insertKey(7);
+    ob.insertKey(4);
+
+    cout<<ob.delMax();
+    return 0;
+}
