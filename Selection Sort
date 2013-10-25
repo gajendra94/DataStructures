@@ -1,0 +1,39 @@
+#include <iostream>
+
+using namespace std;
+
+class Selection
+{
+public:
+    void sortArray(int a[] , int n)
+    {
+        for(int i=0 ; i<n ; i++)
+        {
+            int minimum = i;
+
+            for(int j=i+1 ; j<n ; j++)
+                if(a[minimum]>a[j])
+                    minimum = j;
+            swapElements(a , i , minimum);
+        }
+    }
+
+private:
+    void swapElements(int a[] , int i , int minimum)
+    {
+        int temp = a[i];
+        a[i] = a[minimum];
+        a[minimum] = temp;
+    }
+};
+int main()
+{
+    int a[] = {2,3,1,6,0,9,4,5,7,0,3,9};
+    Selection ob;
+    ob.sortArray(a , 12);
+    for(int i=0 ; i<12 ; i++)
+    {
+        cout<<a[i]<<endl;
+    }
+    return 0;
+}
