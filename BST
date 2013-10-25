@@ -1,0 +1,255 @@
+#include <iostream>
+
+using namespace std;
+class BST
+{
+
+private:
+
+     class Node
+    {
+     public:
+        char key;
+        int val;
+        Node *right;
+        Node *left;
+        int countNode;
+
+        Node(char k , int value)
+        {
+            key = k;
+            val = value;
+            right = NULL;
+            left = NULL;
+            countNode = 1;
+        }
+    };
+
+    Node *root;
+
+    int compareTo(char k , char key)
+    {
+        if(k<key)
+            return -1;
+        else
+            if(k>key)
+            return 1;
+        else
+            return 0;
+    }
+
+
+    Node* minKey(Node *x)
+    {
+        if(x==NULL)
+            return NULL;
+        if(x->left==NULL)
+            return x;
+        x = minKey(x->left);
+        return x;
+    }
+
+    Node* put(Node *x , char k , int value)
+    {
+        if(x==NULL)
+        return new Node(k , value);
+
+        int cmp = compareTo(k , x->key);
+
+        if(cmp<0)
+            x->left = put(x->left , k , value);
+        else
+            if(cmp>0)
+                x->right = put(x->right , k , value);
+        else
+            x->val = value;
+
+        x->countNode = 1 + sizeTree(x->left) + sizeTree(x->right);
+        return x;
+    }
+
+    Node* floor( Node *x , char k)
+    {
+        if(x==NULL)
+            return NULL;
+        int cmp = compareTo(k , x->key);
+        if(cmp==0)
+            return x;
+        if(cmp<0)
+            return floor(x->left , k);
+        Node *t = floor(x->right , k);
+
+        if(t!= NULL)
+            return t;
+        return x;
+    }
+
+    int sizeTree(Node *x)
+    {
+        if(x==NULL)
+            return 0;
+        return x->countNode;
+    }
+
+    int rankKey(Node *x , char k)
+    {
+        if(x==NULL)
+            return 0;
+        int cmp = compareTo(k , x->key);
+        if(cmp<0)
+            return rankKey(x->left , k);
+        else if(cmp>0)
+            return (1+sizeTree(x->left)+rankKey(x->right , k));
+        else
+            return sizeTree(x->left);
+    }
+
+
+    Node* deleteMin(Node *x)
+    {
+        if(x->left == NULL)
+        return x->right;
+
+        x->left = deleteMin(x->left);
+        x->countNode = 1 + sizeTree(x->left) + sizeTree(x->right);
+        return x;
+    }
+
+    Node* deleteKey(Node *x , char k)
+    {
+        if(x==NULL)
+            return NULL;
+        int cmp = compareTo(k , x->key);
+        if(cmp<0)
+            x->left = deleteKey(x->left , k);
+        else if(cmp>0)
+            x->right = deleteKey(x->right , k);
+        else
+        {
+            if(x->right==NULL)
+                return x->left;
+            Node *temp = x;
+            x = minKey(temp->right);
+            x->right = deleteMin(temp->right);
+            x->left = temp->left;
+        }
+
+        x->countNode = 1 + sizeTree(x->right) + sizeTree(x->left);
+        return x;
+    }
+
+    void InorderTraversal(Node *x)
+    {
+        if(x==NULL)
+            return;
+        InorderTraversal(x->left);
+        cout<<x->key;
+        InorderTraversal(x->right);
+
+    }
+
+    void preorderTraversal(Node *x)
+    {
+        if(x==NULL)
+            return;
+        cout<<x->key;
+        preorderTraversal(x->left);
+        preorderTraversal(x->right);
+    }
+
+    void postorderTraversal(Node *x)
+    {
+        if(x==NULL)
+            return;
+        postorderTraversal(x->left);
+        postorderTraversal(x->right);
+        cout<<x->key;
+    }
+
+public:
+
+    BST()
+    {
+        root = NULL;
+    }
+
+    int get(char k)
+    {
+        Node *x = root;
+        while(x!=NULL)
+        {
+            int cmp = compareTo(k , x->key);
+
+            if(cmp<0)
+                x = x->left;
+            else
+                if(cmp>0)
+                    x = x->right;
+            else
+                return x->val;
+        }
+        return -1;
+    }
+
+
+    void put(char k , int value)
+    {
+        root = put(root , k , value);
+    }
+
+    char floor(char k)
+    {
+        Node *x = floor(root , k);
+        if(x==NULL)
+            return NULL;
+        return x->key;
+    }
+    int sizeTree()
+    {
+        return sizeTree(root);
+    }
+
+    int rankKey(char k)
+    {
+        return rankKey(root , k);
+    }
+
+    void deleteMin()
+    {
+        root = deleteMin(root);
+    }
+
+    void  deleteKey( char k)
+    {
+        root = deleteKey(root , k);
+    }
+
+    void InorderTraversal()
+    {
+        InorderTraversal(root);
+    }
+
+    void preorderTraversal()
+    {
+        preorderTraversal(root);
+    }
+
+    void postorderTraversal()
+    {
+        postorderTraversal(root);
+    }
+};
+
+int main()
+{
+    BST x;
+    x.put('b' ,20 );
+    x.put('a' , 15);
+    x.put('e' , 46);
+    x.put('c' , 51);
+    x.put('f', 63);
+
+    x.deleteKey('e');
+    x.InorderTraversal();
+    return 0;
+}
