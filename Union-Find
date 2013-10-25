@@ -1,0 +1,65 @@
+#include <iostream>
+#include<utility>
+#include <vector>
+
+using namespace std;
+
+class Graph
+{
+public:
+    int v;
+    int e;
+    vector< pair<int , int> > edge;
+
+    Graph(int edges , int vertices)
+    {
+        e = edges;
+        v = vertices;
+        edge.resize(edges+1);
+    }
+
+    void addEdge(int i ,int src , int des)
+    {
+        edge[i].first = src;
+        edge[i].second = des;
+    }
+
+    int Find(vector<int> parent , int i)
+    {
+        if(parent[i]==-1)
+            return i;
+        return Find(parent , parent[i]);
+    }
+
+    bool isCycle()
+    {
+        vector<int> parent ;
+        parent.resize(v+1);
+
+        for(int i=1 ; i<=v ; i++)
+        {
+            parent[i] = -1;
+        }
+
+        for(int i=1 ; i <= e ; i++)
+        {
+            int x = Find(parent , edge[i].first);
+            int y = Find(parent , edge[i].second);
+
+            if(x==y)
+                return true;
+            parent[x] = y;
+
+        }
+        return false;
+    }
+
+};
+int main()
+{
+    Graph G(2 , 3);
+    G.addEdge(1 , 1 ,2);
+    G.addEdge(2 , 2 ,3);
+    cout<<G.isCycle();
+    return 0;
+}
