@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int WHITE = 0;
+int GREY = 1;
+int BLACK = 2;
+class Graph
+{
+public:
+    vector< vector<int> > edge;
+    vector<int> color;
+    vector<int> predecessor;
+    queue<int> Q;
+    vector<int> distance;
+
+    Graph(int vertices)
+    {
+        edge.resize(vertices+1);
+        color.resize(vertices +1);
+        predecessor.resize(vertices + 1);
+        distance.resize(vertices + 1);
+
+        for(int i=1 ; i<=vertices ; i++)
+        {
+            color[i] = WHITE;
+            predecessor[i] = NULL;
+            distance[i] = 0;
+         }
+    }
+
+    void addEdge(int i , int j)
+    {
+        edge[i].push_back(j);
+        edge[j].push_back(i);
+    }
+
+    void BFS(int source)
+    {
+        color[source] = GREY;
+        Q.push(source);
+
+        while(!Q.empty())
+        {
+            int u = Q.front();
+            Q.pop();
+            color[u] = BLACK;
+            for(int i=0 ; i<edge[u].size() ; i++)
+            {
+                if(color[i] == WHITE)
+                {
+                    color[i] = GREY;
+                    distance[i] = distance[u]+1;
+                    predecessor[i] = u;
+                    Q.push(i);
+                }
+            }
+        }
+    }
+};
+
+
+int main()
+{
+    Graph G(5);
+
+    G.addEdge(1 , 2);
+    G.addEdge(1 , 4);
+    G.addEdge( 2, 3);
+    G.addEdge(2 , 5);
+
+    G.BFS(1);
+}
