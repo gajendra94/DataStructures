@@ -1,0 +1,85 @@
+#include <iostream>
+#include<vector>
+#include<utility>
+
+using namespace std;
+
+class Graph
+{
+public:
+    int v;
+    int e;
+    vector< pair<int , int> > edge;
+    vector< pair<int , int> > subset;
+
+    Graph(int vertices , int edges)
+    {
+        v = vertices;
+        e = edges;
+        edge.resize(edges+1);
+        subset.resize(vertices+1);
+
+        for(int i=1 ; i<=vertices ; i++)
+        {
+            subset[i].first = i;
+            subset[i].second = 0;
+        }
+    }
+
+    void addEdge(int x , int i , int j)
+    {
+        edge[x].first = i;
+        edge[x].second = j;
+    }
+
+    int Find(int i )
+    {
+        if(subset[i].first != i)
+            subset[i].first=Find(subset[i].first);
+        return subset[i].first;
+    }
+
+    void Union(int x , int y)
+    {
+        int xroot = Find(x);
+        int yroot = Find(y);
+
+        if(subset[xroot].second < subset[yroot].second)
+            subset[xroot].first = yroot;
+        else
+            if(subset[xroot].second > subset[yroot].second)
+                subset[yroot].first = xroot;
+        else
+        {
+            subset[xroot].first = yroot;
+            subset[yroot].second++;
+        }
+    }
+
+    bool isCycle()
+    {
+        for(int i=1 ; i<=e ; i++)
+        {
+            int x = Find(edge[i].first);
+            int y = Find(edge[i].second);
+
+            if(x==y)
+                return 1;
+            Union(x , y);
+        }
+        return 0;
+    }
+
+};
+int main()
+{
+    Graph G(3 , 2);
+
+    G.addEdge(1 , 1 , 2);
+    G.addEdge(2 , 2 , 3);
+
+
+    cout<<G.isCycle();
+
+    return 0;
+}
