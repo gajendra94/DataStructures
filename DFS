@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int WHITE = 0;
+int GREY = 1;
+int BLACK = 2;
+int time = 0;
+class Graph
+{
+public:
+
+    vector< vector<int> > edge;
+    vector<int> color;
+    vector<int> predecessor;
+    vector<int> d;
+    vector<int> f;
+    int N;
+
+    Graph(int vertices)
+    {
+        edge.resize(vertices+1);
+        color.resize(vertices+1);
+        predecessor.resize(vertices+1);
+        d.resize(vertices+1);
+        f.resize(vertices+1);
+        N = vertices;
+
+        for(int i=1 ; i<=vertices ; i++)
+        {
+            color[i] = WHITE;
+            predecessor[i] = 0;
+            d[i] = 0;
+            f[i] = 0;
+        }
+    }
+
+    void addEdge(int i , int j)
+    {
+        edge[i].push_back(j);
+        edge[j].push_back(i);
+    }
+
+    void DFS()
+    {
+        for(int i=1 ; i<=N ; i++)
+        {
+            if(color[i]== WHITE)
+                DFS(i);
+        }
+    }
+
+private:
+
+    void DFS(int v)
+    {
+        color[v] = GREY;
+        time++;
+        d[v]= time;
+        for(int i=0 ; i<edge[v].size() ; i++)
+        {
+            if(color[edge[v][i]] == WHITE)
+            {
+                predecessor[edge[v][i]] = v;
+                DFS(edge[v][i]);
+            }
+        }
+
+        color[v] = BLACK;
+        f[v] = ++time;
+    }
+};
+int main()
+{
+    Graph G(5);
+    G.addEdge(1 , 2);
+    G.addEdge(1 , 4);
+    G.addEdge(2 , 3);
+    G.addEdge(1 , 3);
+    G.addEdge(3 , 5);
+
+    G.DFS();
+}
