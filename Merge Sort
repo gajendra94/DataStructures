@@ -1,0 +1,73 @@
+#include <iostream>
+
+using namespace std;
+
+
+class Merge
+{
+private:
+
+    int CUTOFF = 7;
+
+    void mergeArray(int a[] , int aux[] , int lo , int mid , int hi)
+    {
+        for(int k = lo ; k<=hi ; k++)
+        {
+            aux[k] = a[k];
+        }
+
+        int i=lo , j = mid+1;
+
+        for(int k=lo ; k<=hi ; k++)
+        {
+                if(i>mid)
+                    a[k] = aux[j++];
+                else
+                    if(j>hi)
+                        a[k] = aux[i++];
+                else
+                    if(aux[i] < aux[j])
+                        a[k] = aux[i++];
+                else
+                    a[k] = aux[j++];
+        }
+    }
+
+    void MergeSort(int a[] , int aux[] , int lo , int hi)
+    {
+        if(hi<=lo)
+            return;
+
+        int mid = lo + (hi-lo)/2;
+
+        MergeSort(a , aux , lo , mid);
+        MergeSort(a , aux ,mid+1 , hi);
+
+        if(a[mid+1]>a[mid])
+            return;
+
+        mergeArray(a , aux , lo , mid , hi);
+    }
+
+
+public:
+
+    void MergeSort(int a[] , int n)
+    {
+        int aux[n];
+
+        MergeSort( a , aux  , 0 , n-1);
+    }
+};
+int main()
+{
+    int a[] = {2,5,1,3,6,4,8,3,2,8,2,3,9,2};
+    Merge ob;
+    ob.MergeSort(a , 14);
+
+    for(int i=0 ; i<14 ; i++)
+    {
+        cout<<a[i]<<endl;
+    }
+    return 0;
+}
