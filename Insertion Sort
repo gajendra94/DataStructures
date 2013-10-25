@@ -1,0 +1,43 @@
+#include <iostream>
+
+using namespace std;
+
+class Insertion
+{
+public:
+    void sortArray(int a[] , int n)
+    {
+        for(int i=0 ; i<n ; i++)
+        {
+            for(int j=i ; j>0 ; j--)
+            {
+                if(a[j] < a[j-1])
+                    swapArray(a , j , j-1);
+                else
+                    break;
+            }
+        }
+    }
+
+
+private:
+
+    void swapArray(int a[] , int i , int j)
+    {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+};
+
+int main()
+{
+    int a[] = {1,6,3,8,9,7,2,0,4,9,4};
+
+    Insertion ob;
+    ob.sortArray(a , 11);
+
+    for(int i =0 ; i<11 ; i++)
+        cout<<a[i]<<endl;
+    return 0;
+}
