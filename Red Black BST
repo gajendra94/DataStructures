@@ -1,0 +1,116 @@
+#include <iostream>
+
+using namespace std;
+
+class RBBST
+{
+        static  bool RED;
+        static bool BLACK ;
+        class Node
+        {
+            public:
+            char key;
+            int val;
+            bool color;
+            Node *left , *right;
+            Node(char k , int value)
+            {
+                key = k;
+                val = value;
+                color = RED;
+            }
+        };
+
+        Node *root;
+
+        RBBST()
+        {
+            root = NULL;
+        }
+
+        int compareTo( char k , char key)
+        {
+            if(k < key)
+                return -1;
+            else
+                if(k > key)
+                    return 1;
+            else
+                return 0;
+        }
+
+        bool isRed(Node *x)
+        {
+            if(x==NULL)
+                return 0;
+            return x->color == RED;
+        }
+
+        Node* rotateLeft(Node* h)
+        {
+            Node *x = h->right;
+            h->right = x->left;
+            x->left = h;
+            x->color = h->color;
+            h->color = RED;
+            return  x;
+        }
+
+        Node* rotateRight(Node *h)
+        {
+            Node *x = h->left;
+            h->left = x->right;
+            x->right = h;
+            x->color = h->color;
+            h->color = RED;
+            return x;
+        }
+
+        void flipcolor(Node *h)
+        {
+            h->color = RED;
+            h->left->color = BLACK;
+            h->right->color = BLACK;
+        }
+
+
+        Node* put(Node *x , char k , int value)
+        {
+            if(x==NULL)
+                return new Node(k , value);
+
+            int cmp = compareTo(k , x->key);
+
+            if(cmp<0)
+                x->left = put(x->left , k , value);
+            else
+                if(cmp>0)
+                    x->right = put(x->right , k , value);
+            else
+                x->val = value;
+
+            if(isRed(x->right) && !isRed(x->left))
+                x = rotateLeft(x);
+
+            if(isRed(x->left) && isRed(x->left->left))
+                x = rotateRight(x);
+
+            if(isRed(x->left) && isRed(x->right))
+                flipcolor(x);
+
+            return x;
+
+        }
+
+        void put(char k , int value)
+        {
+            root = put(root , k , value);
+        }
+
+
+};
+int main()
+{
+    cout << "Hello world!" << endl;
+    return 0;
+}
