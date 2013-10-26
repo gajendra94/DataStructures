@@ -13,12 +13,12 @@ public:
         node *left;
         node *right;
 
-        node(char data , int frequency)
+        node(char data , int frequency, node *left=0, node *right=0)
         {
             this->data = data;
             this->frequency = frequency;
-            left = NULL;
-            right = NULL;
+            this-> left = left;
+            this-> right = right;
         }
     };
 
@@ -111,9 +111,7 @@ public:
             left  = findMin();
             right = findMin();
 
-            node *top = new node('$' , left->frequency + right->frequency);
-            top->left = left;
-            top->right = right;
+            node *top = new node('$' , left->frequency + right->frequency,left,right);
             second.push(top);
         }
 
